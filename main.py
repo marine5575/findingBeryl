@@ -19,21 +19,22 @@ if __name__ == "__main__":
     maxLevel = int(args.level)
     start = int(args.start)
     end = int(args.end)
-    f_name = '베릴 후보 리스트.csv'
     driver_path = os.path.join(args.driver_path, 'chromedriver.exe')
     
     get_list = findCandidates.GetBerylCandidates(driver_path)
-    get_list.setting_file(dir_path, f_name)
-    # flag = get_list.searching(dir_path, maxLevel) # 정상적으로 끝났다면 0 반환
     totalPage = get_list.getTotalCnt() # 정상적으로 끝났다면 0 반환
 
+    # 랭크 페이지에 있는 총 소환사 수 읽는 도중 문제 발생했을 때
+    if totalPage < 0: exit(1)
+
+    # end 값이 입력되지 않았을 때
     if end == 0: end = totalPage
 
+    f_name = f'베릴 후보 리스트_{start}_{end}.csv'
+    get_list.setting_file(dir_path, f_name)
     flag = get_list.searching(dir_path, start, end, maxLevel) # 정상적으로 끝났다면 0 반환
 
     get_list.close()
-    
-    if totalPage < 0: exit(1)
     
     flag = get_list.make_new_file() # 파일 update
     
